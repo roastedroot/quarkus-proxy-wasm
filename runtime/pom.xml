@@ -32,7 +32,7 @@
     <dependency>
       <groupId>io.roastedroot</groupId>
       <artifactId>proxy-wasm-jaxrs</artifactId>
-      <version>${project.version}</version>
+      <version>${proxy-wasm.version}</version>
     </dependency>
 
   </dependencies>
