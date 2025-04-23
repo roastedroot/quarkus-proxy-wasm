@@ -1,10 +1,11 @@
 package io.quarkiverse.proxywasm.runtime;
 
-import io.roastedroot.proxywasm.jaxrs.internal.JaxrsHttpRequestAdaptor;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.Alternative;
 import jakarta.inject.Inject;
+
+import io.roastedroot.proxywasm.jaxrs.internal.JaxrsHttpRequestAdaptor;
 
 /**
  * Vert.x specific implementation of {@link JaxrsHttpRequestAdaptor}.
@@ -22,7 +23,8 @@ public class VertxHttpRequestAdaptor extends JaxrsHttpRequestAdaptor {
         // Default constructor for VertxHttpRequestAdaptor
     }
 
-    @Inject io.vertx.core.http.HttpServerRequest request;
+    @Inject
+    io.vertx.core.http.HttpServerRequest request;
 
     @Override
     public String remoteAddress() {

@@ -1,16 +1,19 @@
 package io.quarkiverse.proxywasm.it;
 
+import java.net.URI;
+import java.util.Map;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+
 import com.dylibso.chicory.experimental.aot.AotMachine;
 import com.dylibso.chicory.wasm.Parser;
 import com.dylibso.chicory.wasm.WasmModule;
 import com.google.gson.Gson;
+
 import io.roastedroot.proxywasm.Plugin;
 import io.roastedroot.proxywasm.PluginFactory;
 import io.roastedroot.proxywasm.StartException;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Produces;
-import java.net.URI;
-import java.util.Map;
 
 /**
  * Application configuration for integration tests.
@@ -38,13 +41,12 @@ public class App {
      */
     @Produces
     public PluginFactory headerTests() throws StartException {
-        return () ->
-                Plugin.builder(MODULE)
-                        .withName("headerTests")
-                        .withShared(true)
-                        .withLogger(new MockLogger("headerTests"))
-                        .withPluginConfig(gson.toJson(Map.of("type", "headerTests")))
-                        .build();
+        return () -> Plugin.builder(MODULE)
+                .withName("headerTests")
+                .withShared(true)
+                .withLogger(new MockLogger("headerTests"))
+                .withPluginConfig(gson.toJson(Map.of("type", "headerTests")))
+                .build();
     }
 
     /**
@@ -55,13 +57,12 @@ public class App {
      */
     @Produces
     public PluginFactory headerTestsNotShared() throws StartException {
-        return () ->
-                Plugin.builder(MODULE)
-                        .withName("headerTestsNotShared")
-                        .withLogger(new MockLogger("headerTestsNotShared"))
-                        .withPluginConfig(gson.toJson(Map.of("type", "headerTests")))
-                        .withMachineFactory(AotMachine::new)
-                        .build();
+        return () -> Plugin.builder(MODULE)
+                .withName("headerTestsNotShared")
+                .withLogger(new MockLogger("headerTestsNotShared"))
+                .withPluginConfig(gson.toJson(Map.of("type", "headerTests")))
+                .withMachineFactory(AotMachine::new)
+                .build();
     }
 
     /**
@@ -72,14 +73,13 @@ public class App {
      */
     @Produces
     public PluginFactory tickTests() throws StartException {
-        return () ->
-                Plugin.builder(MODULE)
-                        .withName("tickTests")
-                        .withShared(true)
-                        .withLogger(new MockLogger("tickTests"))
-                        .withPluginConfig(gson.toJson(Map.of("type", "tickTests")))
-                        .withMachineFactory(AotMachine::new)
-                        .build();
+        return () -> Plugin.builder(MODULE)
+                .withName("tickTests")
+                .withShared(true)
+                .withLogger(new MockLogger("tickTests"))
+                .withPluginConfig(gson.toJson(Map.of("type", "tickTests")))
+                .withMachineFactory(AotMachine::new)
+                .build();
     }
 
     /**
@@ -90,15 +90,14 @@ public class App {
      */
     @Produces
     public PluginFactory ffiTests() throws StartException {
-        return () ->
-                Plugin.builder(MODULE)
-                        .withName("ffiTests")
-                        .withLogger(new MockLogger("ffiTests"))
-                        .withPluginConfig(
-                                gson.toJson(Map.of("type", "ffiTests", "function", "reverse")))
-                        .withForeignFunctions(Map.of("reverse", App::reverse))
-                        .withMachineFactory(AotMachine::new)
-                        .build();
+        return () -> Plugin.builder(MODULE)
+                .withName("ffiTests")
+                .withLogger(new MockLogger("ffiTests"))
+                .withPluginConfig(
+                        gson.toJson(Map.of("type", "ffiTests", "function", "reverse")))
+                .withForeignFunctions(Map.of("reverse", App::reverse))
+                .withMachineFactory(AotMachine::new)
+                .build();
     }
 
     /**
@@ -123,18 +122,17 @@ public class App {
      */
     @Produces
     public PluginFactory httpCallTests() throws StartException {
-        return () ->
-                Plugin.builder(MODULE)
-                        .withName("httpCallTests")
-                        .withLogger(new MockLogger("httpCallTests"))
-                        .withPluginConfig(
-                                gson.toJson(
-                                        Map.of(
-                                                "type", "httpCallTests",
-                                                "upstream", "web_service",
-                                                "path", "/ok")))
-                        .withUpstreams(Map.of("web_service", new URI("http://localhost:8081")))
-                        .withMachineFactory(AotMachine::new)
-                        .build();
+        return () -> Plugin.builder(MODULE)
+                .withName("httpCallTests")
+                .withLogger(new MockLogger("httpCallTests"))
+                .withPluginConfig(
+                        gson.toJson(
+                                Map.of(
+                                        "type", "httpCallTests",
+                                        "upstream", "web_service",
+                                        "path", "/ok")))
+                .withUpstreams(Map.of("web_service", new URI("http://localhost:8081")))
+                .withMachineFactory(AotMachine::new)
+                .build();
     }
 }

@@ -4,8 +4,9 @@ import static io.quarkiverse.proxywasm.it.Helpers.isTrue;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
+
+import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 public class TickTest {
@@ -25,7 +26,7 @@ public class TickTest {
         // stop getting ticks.
         given().when().get("/tickTests/disable").then().statusCode(200).body(equalTo("ok"));
 
-        var counter = new String[] {"0"};
+        var counter = new String[] { "0" };
 
         // plugin should have received at least 1 tick.
         given().when()

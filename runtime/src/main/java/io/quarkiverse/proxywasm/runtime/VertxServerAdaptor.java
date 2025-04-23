@@ -1,5 +1,20 @@
 package io.quarkiverse.proxywasm.runtime;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.annotation.Priority;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
+
 import io.grpc.CallOptions;
 import io.grpc.ClientCall;
 import io.grpc.ManagedChannel;
@@ -18,19 +33,6 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientResponse;
 import io.vertx.core.http.HttpMethod;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import jakarta.annotation.Priority;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Alternative;
-import jakarta.enterprise.inject.Instance;
-import jakarta.inject.Inject;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Vert.x specific implementation of {@link ServerAdaptor}.
@@ -49,7 +51,8 @@ public class VertxServerAdaptor implements ServerAdaptor {
         // Default constructor for VertxServerAdaptor
     }
 
-    @Inject Vertx vertx;
+    @Inject
+    Vertx vertx;
 
     HttpClient client;
 
@@ -79,7 +82,8 @@ public class VertxServerAdaptor implements ServerAdaptor {
         };
     }
 
-    @Inject Instance<VertxHttpRequestAdaptor> httpRequestAdaptors;
+    @Inject
+    Instance<VertxHttpRequestAdaptor> httpRequestAdaptors;
 
     @Override
     public HttpRequestAdaptor httpRequestAdaptor(Object context) {
@@ -98,41 +102,39 @@ public class VertxServerAdaptor implements ServerAdaptor {
             int timeout,
             HttpCallResponseHandler handler)
             throws InterruptedException {
-        var f =
-                client.request(HttpMethod.valueOf(method), port, host, uri.toString())
-                        .compose(
-                                req -> {
-                                    for (var e : headers.entries()) {
-                                        req.headers().add(e.getKey(), e.getValue());
-                                    }
-                                    req.idleTimeout(timeout);
-                                    return req.send(Buffer.buffer(body));
-                                })
-                        .onComplete(
-                                resp -> {
-                                    if (resp.succeeded()) {
-                                        HttpClientResponse result = resp.result();
-                                        result.bodyHandler(
-                                                bodyHandler -> {
-                                                    var h = ProxyMap.of();
-                                                    result.headers()
-                                                            .forEach(
-                                                                    e ->
-                                                                            h.add(
-                                                                                    e.getKey(),
-                                                                                    e.getValue()));
-                                                    handler.call(
-                                                            result.statusCode(),
-                                                            h,
-                                                            bodyHandler.getBytes());
-                                                });
-                                    } else {
-                                        handler.call(
-                                                500,
-                                                ProxyMap.of(),
-                                                resp.cause().getMessage().getBytes());
-                                    }
-                                });
+        var f = client.request(HttpMethod.valueOf(method), port, host, uri.toString())
+                .compose(
+                        req -> {
+                            for (var e : headers.entries()) {
+                                req.headers().add(e.getKey(), e.getValue());
+                            }
+                            req.idleTimeout(timeout);
+                            return req.send(Buffer.buffer(body));
+                        })
+                .onComplete(
+                        resp -> {
+                            if (resp.succeeded()) {
+                                HttpClientResponse result = resp.result();
+                                result.bodyHandler(
+                                        bodyHandler -> {
+                                            var h = ProxyMap.of();
+                                            result.headers()
+                                                    .forEach(
+                                                            e -> h.add(
+                                                                    e.getKey(),
+                                                                    e.getValue()));
+                                            handler.call(
+                                                    result.statusCode(),
+                                                    h,
+                                                    bodyHandler.getBytes());
+                                        });
+                            } else {
+                                handler.call(
+                                        500,
+                                        ProxyMap.of(),
+                                        resp.cause().getMessage().getBytes());
+                            }
+                        });
 
         return () -> {
             // There doesn't seem to be a way to cancel the request.
@@ -152,8 +154,7 @@ public class VertxServerAdaptor implements ServerAdaptor {
             GrpcCallResponseHandler handler)
             throws InterruptedException {
 
-        ManagedChannelBuilder<?> managedChannelBuilder =
-                ManagedChannelBuilder.forAddress(host, port);
+        ManagedChannelBuilder<?> managedChannelBuilder = ManagedChannelBuilder.forAddress(host, port);
         if (plainText) {
             managedChannelBuilder.usePlaintext();
         } else {
@@ -162,25 +163,22 @@ public class VertxServerAdaptor implements ServerAdaptor {
         ManagedChannel channel = managedChannelBuilder.build();
 
         // Construct method descriptor (assuming unary request/response and protobuf)
-        MethodDescriptor<byte[], byte[]> methodDescriptor =
-                MethodDescriptor.<byte[], byte[]>newBuilder()
-                        .setType(MethodDescriptor.MethodType.UNARY)
-                        .setFullMethodName(
-                                MethodDescriptor.generateFullMethodName(serviceName, methodName))
-                        .setRequestMarshaller(new BytesMessageMarshaller())
-                        .setResponseMarshaller(new BytesMessageMarshaller())
-                        .build();
+        MethodDescriptor<byte[], byte[]> methodDescriptor = MethodDescriptor.<byte[], byte[]> newBuilder()
+                .setType(MethodDescriptor.MethodType.UNARY)
+                .setFullMethodName(
+                        MethodDescriptor.generateFullMethodName(serviceName, methodName))
+                .setRequestMarshaller(new BytesMessageMarshaller())
+                .setResponseMarshaller(new BytesMessageMarshaller())
+                .build();
 
-        ClientCall<byte[], byte[]> call =
-                channel.newCall(
-                        methodDescriptor,
-                        CallOptions.DEFAULT.withDeadlineAfter(
-                                timeoutMillis * 1000, TimeUnit.MILLISECONDS));
+        ClientCall<byte[], byte[]> call = channel.newCall(
+                methodDescriptor,
+                CallOptions.DEFAULT.withDeadlineAfter(
+                        timeoutMillis * 1000, TimeUnit.MILLISECONDS));
 
         Metadata metadata = new Metadata();
         for (Map.Entry<String, String> entry : headers.entries()) {
-            Metadata.Key<String> key =
-                    Metadata.Key.of(entry.getKey(), Metadata.ASCII_STRING_MARSHALLER);
+            Metadata.Key<String> key = Metadata.Key.of(entry.getKey(), Metadata.ASCII_STRING_MARSHALLER);
             metadata.put(key, entry.getValue());
         }
 
@@ -200,16 +198,14 @@ public class VertxServerAdaptor implements ServerAdaptor {
                         ArrayBytesProxyMap trailerMap = new ArrayBytesProxyMap();
                         for (var key : metadata.keys()) {
                             if (key.endsWith("-bin")) {
-                                var value =
-                                        metadata.get(
-                                                Metadata.Key.of(
-                                                        key, Metadata.BINARY_BYTE_MARSHALLER));
+                                var value = metadata.get(
+                                        Metadata.Key.of(
+                                                key, Metadata.BINARY_BYTE_MARSHALLER));
                                 trailerMap.add(key, value);
                             } else {
-                                var value =
-                                        metadata.get(
-                                                Metadata.Key.of(
-                                                        key, Metadata.ASCII_STRING_MARSHALLER));
+                                var value = metadata.get(
+                                        Metadata.Key.of(
+                                                key, Metadata.ASCII_STRING_MARSHALLER));
                                 trailerMap.add(key, value);
                             }
                         }
@@ -226,10 +222,9 @@ public class VertxServerAdaptor implements ServerAdaptor {
                         if (!metadata.keys().isEmpty()) {
                             ArrayBytesProxyMap trailerMap = new ArrayBytesProxyMap();
                             for (var key : metadata.keys()) {
-                                var value =
-                                        metadata.get(
-                                                Metadata.Key.of(
-                                                        key, Metadata.BINARY_BYTE_MARSHALLER));
+                                var value = metadata.get(
+                                        Metadata.Key.of(
+                                                key, Metadata.BINARY_BYTE_MARSHALLER));
                                 trailerMap.add(key, value);
                             }
                             handler.onTrailers(trailerMap);

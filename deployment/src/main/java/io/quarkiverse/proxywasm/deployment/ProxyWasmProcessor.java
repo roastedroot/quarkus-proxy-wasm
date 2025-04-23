@@ -1,5 +1,9 @@
 package io.quarkiverse.proxywasm.deployment;
 
+import java.util.List;
+
+import org.jboss.jandex.DotName;
+
 import io.quarkiverse.proxywasm.runtime.VertxHttpRequestAdaptor;
 import io.quarkiverse.proxywasm.runtime.VertxServerAdaptor;
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
@@ -8,8 +12,6 @@ import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.jaxrs.spi.deployment.AdditionalJaxRsResourceMethodAnnotationsBuildItem;
 import io.roastedroot.proxywasm.jaxrs.WasmPlugin;
 import io.roastedroot.proxywasm.jaxrs.cdi.WasmPluginFeature;
-import java.util.List;
-import org.jboss.jandex.DotName;
 
 class ProxyWasmProcessor {
 

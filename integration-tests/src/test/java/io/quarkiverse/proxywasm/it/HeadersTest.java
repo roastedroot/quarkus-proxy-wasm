@@ -3,8 +3,9 @@ package io.quarkiverse.proxywasm.it;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
+
+import io.quarkus.test.junit.QuarkusTest;
 
 /**
  * This test verifies that the plugin can modify request and response headers.
