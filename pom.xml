@@ -34,7 +34,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.version>3.21.3</quarkus.version>
     <surefire-plugin.version>3.5.2</surefire-plugin.version>
-    <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
+    <spotless-maven-plugin.version>2.44.4</spotless-maven-plugin.version>
     <proxy-wasm.version>1.0-SNAPSHOT</proxy-wasm.version>
   </properties>
 
