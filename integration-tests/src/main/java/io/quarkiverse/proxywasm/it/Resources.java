@@ -1,6 +1,5 @@
 package io.quarkiverse.proxywasm.it;
 
-import io.roastedroot.proxywasm.jaxrs.WasmPlugin;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
@@ -9,6 +8,8 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
+
+import io.roastedroot.proxywasm.jaxrs.WasmPlugin;
 
 /**
  * JAX-RS resource class providing endpoints for integration tests.
@@ -23,7 +24,8 @@ public class Resources {
         // Default constructor
     }
 
-    @Context ContainerRequestContext requestContext;
+    @Context
+    ContainerRequestContext requestContext;
 
     /**
      * Endpoint that simulates a failure response.
@@ -126,7 +128,7 @@ public class Resources {
      */
     @Path("/httpCallTestsAndFFI")
     @GET
-    @WasmPlugin({"ffiTests", "httpCallTests"})
+    @WasmPlugin({ "ffiTests", "httpCallTests" })
     public String httpCallTestsAndFFI() {
         return "hello world";
     }

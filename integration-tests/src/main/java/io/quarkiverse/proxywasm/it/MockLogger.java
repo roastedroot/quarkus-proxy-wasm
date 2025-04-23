@@ -1,8 +1,9 @@
 package io.quarkiverse.proxywasm.it;
 
+import java.util.ArrayList;
+
 import io.roastedroot.proxywasm.LogHandler;
 import io.roastedroot.proxywasm.LogLevel;
-import java.util.ArrayList;
 
 /**
  * A mock implementation of {@link LogHandler} for testing purposes.

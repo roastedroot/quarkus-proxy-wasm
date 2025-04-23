@@ -1,12 +1,14 @@
 package io.quarkiverse.proxywasm.it;
 
 import java.util.ArrayList;
+
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.jupiter.api.Assertions;
 
 public class Helpers {
-    private Helpers() {}
+    private Helpers() {
+    }
 
     public static void assertLogsContain(ArrayList<String> loggedMessages, String... message) {
         for (String m : message) {

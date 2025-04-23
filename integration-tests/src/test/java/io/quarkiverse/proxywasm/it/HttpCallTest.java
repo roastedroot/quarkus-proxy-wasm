@@ -3,9 +3,10 @@ package io.quarkiverse.proxywasm.it;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
+import org.junit.jupiter.api.Test;
+
 import io.quarkus.test.junit.QuarkusTest;
 import io.roastedroot.proxywasm.StartException;
-import org.junit.jupiter.api.Test;
 
 @QuarkusTest
 public class HttpCallTest {
