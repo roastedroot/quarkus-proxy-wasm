@@ -1,27 +1,62 @@
-# Quarkus Proxy Wasm
+# Quarkus Proxy-WASM Extension
 
 [![Version](https://img.shields.io/maven-central/v/io.quarkiverse.proxy-wasm/quarkus-proxy-wasm?logo=apache-maven&style=flat-square)](https://central.sonatype.com/artifact/io.quarkiverse.proxy-wasm/quarkus-proxy-wasm-parent)
 
-## Welcome to Quarkiverse!
+The Java implementation for proxy-wasm, enabling developer to run Proxy-Wasm plugins in Java.
 
-Congratulations and thank you for creating a new Quarkus extension project in Quarkiverse!
+## Overview
 
-Feel free to replace this content with the proper description of your new project and necessary instructions how to use and contribute to it.
+Proxy-Wasm is a plugin system for network proxies. It lets you write plugins that can act as request filters in a
+portable, sandboxed, and language-agnostic way, thanks to WebAssembly.
 
-You can find the basic info, Quarkiverse policies and conventions in [the Quarkiverse wiki](https://github.com/quarkiverse/quarkiverse/wiki).
+This Quarkus extension allows you to use Proxy-Wasm plugins to filter requests to Jakarta REST (formerly known as JAX-RS)
+endpoints.
 
-In case you are creating a Quarkus extension project for the first time, please follow [Building My First Extension](https://quarkus.io/guides/building-my-first-extension) guide.
+Adding a Proxy-Wasm plugin to a JAX-RS endpoint is as simple as adding a `@WasmPlugin` annotation to a method:
 
-Other useful articles related to Quarkus extension development can be found under the [Writing Extensions](https://quarkus.io/guides/#writing-extensions) guide category on the [Quarkus.io](https://quarkus.io) website.
+```java
+package org.example;
 
-Thanks again, good luck and have fun!
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import io.roastedroot.proxywasm.jaxrs.WasmPlugin;
 
-## Documentation
+@Path("/example")
+public class Example {
 
-The documentation for this extension should be maintained as part of this repository and it is stored in the `docs/` directory.
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @WasmPlugin("waf")
+    public String hello() {
+        return "hello";
+    }
+}
+```
 
-The layout should follow the [Antora's Standard File and Directory Set](https://docs.antora.org/antora/2.3/standard-directories/).
+## Docs
 
-Once the docs are ready to be published, please open a PR including this repository in the [Quarkiverse Docs Antora playbook](https://github.com/quarkiverse/quarkiverse-docs/blob/main/antora-playbook.yml#L7). See an example [here](https://github.com/quarkiverse/quarkiverse-docs/pull/1)
+* [Usage Guide](./docs/modules/ROOT/pages/index.adoc)
 
-Your documentation will then be published to the <https://docs.quarkiverse.io/> website.
+### Docs and SDKs for plugin authors:
+
+* link:https://github.com/istio-ecosystem/wasm-extensions[Proxy-Wasm ABI specification]
+* link:https://github.com/proxy-wasm/proxy-wasm-cpp-sdk[Proxy-Wasm C++ SDK]
+* link:https://github.com/proxy-wasm/proxy-wasm-rust-sdk[Proxy-Wasm Rust SDK]
+* link:https://github.com/proxy-wasm/proxy-wasm-go-sdk[Proxy-Wasm Go SDK]
+* link:https://github.com/solo-io/proxy-runtime[Proxy-Wasm AssemblyScript SDK]
+
+### Popular Proxy-Wasm plugins:
+
+* link:https://github.com/corazawaf/coraza-proxy-wasm[Coraza WAF]
+* link:https://github.com/Kuadrant/wasm-shim/[Kuadrant]
+
+
+## Building
+
+To build the project, you need to have Maven installed. You can build the project using the following command:
+
+```bash
+mvn clean install
+```
