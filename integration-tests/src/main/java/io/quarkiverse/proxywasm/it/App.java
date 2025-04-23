@@ -10,7 +10,6 @@ import io.roastedroot.proxywasm.StartException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import java.net.URI;
-import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -27,22 +26,9 @@ public class App {
         // Default constructor
     }
 
-    /**
-     * Directory containing the example Wasm modules used for testing.
-     */
-    public static final String EXAMPLES_DIR = "../../proxy-wasm-java-host/src/test";
-
     private static final Gson gson = new Gson();
 
-    /**
-     * Parses a Wasm module from the specified file path relative to the examples directory.
-     *
-     * @param file The relative path to the Wasm module file.
-     * @return The parsed {@link WasmModule}.
-     */
-    public static WasmModule parseTestModule(String file) {
-        return Parser.parse(Path.of(EXAMPLES_DIR + file));
-    }
+    private WasmModule MODULE = Parser.parse(App.class.getResourceAsStream("/main.wasm"));
 
     /**
      * Produces a {@link PluginFactory} for header manipulation tests (shared instance).
@@ -53,7 +39,7 @@ public class App {
     @Produces
     public PluginFactory headerTests() throws StartException {
         return () ->
-                Plugin.builder(parseTestModule("/go-examples/unit_tester/main.wasm"))
+                Plugin.builder(MODULE)
                         .withName("headerTests")
                         .withShared(true)
                         .withLogger(new MockLogger("headerTests"))
@@ -70,7 +56,7 @@ public class App {
     @Produces
     public PluginFactory headerTestsNotShared() throws StartException {
         return () ->
-                Plugin.builder(parseTestModule("/go-examples/unit_tester/main.wasm"))
+                Plugin.builder(MODULE)
                         .withName("headerTestsNotShared")
                         .withLogger(new MockLogger("headerTestsNotShared"))
                         .withPluginConfig(gson.toJson(Map.of("type", "headerTests")))
@@ -87,7 +73,7 @@ public class App {
     @Produces
     public PluginFactory tickTests() throws StartException {
         return () ->
-                Plugin.builder(parseTestModule("/go-examples/unit_tester/main.wasm"))
+                Plugin.builder(MODULE)
                         .withName("tickTests")
                         .withShared(true)
                         .withLogger(new MockLogger("tickTests"))
@@ -105,7 +91,7 @@ public class App {
     @Produces
     public PluginFactory ffiTests() throws StartException {
         return () ->
-                Plugin.builder(parseTestModule("/go-examples/unit_tester/main.wasm"))
+                Plugin.builder(MODULE)
                         .withName("ffiTests")
                         .withLogger(new MockLogger("ffiTests"))
                         .withPluginConfig(
@@ -138,7 +124,7 @@ public class App {
     @Produces
     public PluginFactory httpCallTests() throws StartException {
         return () ->
-                Plugin.builder(parseTestModule("/go-examples/unit_tester/main.wasm"))
+                Plugin.builder(MODULE)
                         .withName("httpCallTests")
                         .withLogger(new MockLogger("httpCallTests"))
                         .withPluginConfig(
