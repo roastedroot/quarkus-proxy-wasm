@@ -41,16 +41,16 @@ public class Example {
 
 ### Docs and SDKs for plugin authors:
 
-* link:https://github.com/istio-ecosystem/wasm-extensions[Proxy-Wasm ABI specification]
-* link:https://github.com/proxy-wasm/proxy-wasm-cpp-sdk[Proxy-Wasm C++ SDK]
-* link:https://github.com/proxy-wasm/proxy-wasm-rust-sdk[Proxy-Wasm Rust SDK]
-* link:https://github.com/proxy-wasm/proxy-wasm-go-sdk[Proxy-Wasm Go SDK]
-* link:https://github.com/solo-io/proxy-runtime[Proxy-Wasm AssemblyScript SDK]
+* [ABI specification](https://github.com/istio-ecosystem/wasm-extensions[Proxy-Wasm)
+* [C++ SDK](https://github.com/proxy-wasm/proxy-wasm-cpp-sdk[Proxy-Wasm)
+* [Rust SDK](https://github.com/proxy-wasm/proxy-wasm-rust-sdk[Proxy-Wasm)
+* [Go SDK](https://github.com/proxy-wasm/proxy-wasm-go-sdk[Proxy-Wasm)
+* [AssemblyScript SDK](https://github.com/solo-io/proxy-runtime[Proxy-Wasm)
 
 ### Popular Proxy-Wasm plugins:
 
-* link:https://github.com/corazawaf/coraza-proxy-wasm[Coraza WAF]
-* link:https://github.com/Kuadrant/wasm-shim/[Kuadrant]
+* [Coraza WAF](link:https://github.com/corazawaf/coraza-proxy-wasm)
+* [Kuadrant](link:https://github.com/Kuadrant/wasm-shim/)
 
 
 ## Building
