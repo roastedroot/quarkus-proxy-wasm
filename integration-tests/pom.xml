@@ -46,6 +46,23 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>com.dylibso.chicory</groupId>
+        <artifactId>aot-maven-plugin-experimental</artifactId>
+        <version>${chicory.version}</version>
+        <executions>
+          <execution>
+            <id>wasm-shim</id>
+            <goals>
+              <goal>wasm-aot-gen</goal>
+            </goals>
+            <configuration>
+              <name>org.example.internal.MainWasm</name>
+              <wasmFile>src/main/resources/main.wasm</wasmFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
         <executions>

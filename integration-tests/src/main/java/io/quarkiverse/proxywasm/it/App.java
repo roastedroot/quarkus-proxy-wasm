@@ -6,8 +6,8 @@ import java.util.Map;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 
-import com.dylibso.chicory.experimental.aot.AotMachine;
-import com.dylibso.chicory.wasm.Parser;
+import org.example.internal.MainWasmModule;
+
 import com.dylibso.chicory.wasm.WasmModule;
 import com.google.gson.Gson;
 
@@ -26,12 +26,10 @@ public class App {
      * Default constructor.
      */
     public App() {
-        // Default constructor
     }
 
     private static final Gson gson = new Gson();
-
-    private WasmModule MODULE = Parser.parse(App.class.getResourceAsStream("/main.wasm"));
+    private WasmModule MODULE = MainWasmModule.load();
 
     /**
      * Produces a {@link PluginFactory} for header manipulation tests (shared instance).
@@ -46,6 +44,7 @@ public class App {
                 .withShared(true)
                 .withLogger(new MockLogger("headerTests"))
                 .withPluginConfig(gson.toJson(Map.of("type", "headerTests")))
+                .withMachineFactory(MainWasmModule::create)
                 .build();
     }
 
@@ -61,7 +60,7 @@ public class App {
                 .withName("headerTestsNotShared")
                 .withLogger(new MockLogger("headerTestsNotShared"))
                 .withPluginConfig(gson.toJson(Map.of("type", "headerTests")))
-                .withMachineFactory(AotMachine::new)
+                .withMachineFactory(MainWasmModule::create)
                 .build();
     }
 
@@ -78,7 +77,7 @@ public class App {
                 .withShared(true)
                 .withLogger(new MockLogger("tickTests"))
                 .withPluginConfig(gson.toJson(Map.of("type", "tickTests")))
-                .withMachineFactory(AotMachine::new)
+                .withMachineFactory(MainWasmModule::create)
                 .build();
     }
 
@@ -96,7 +95,7 @@ public class App {
                 .withPluginConfig(
                         gson.toJson(Map.of("type", "ffiTests", "function", "reverse")))
                 .withForeignFunctions(Map.of("reverse", App::reverse))
-                .withMachineFactory(AotMachine::new)
+                .withMachineFactory(MainWasmModule::create)
                 .build();
     }
 
@@ -132,7 +131,7 @@ public class App {
                                         "upstream", "web_service",
                                         "path", "/ok")))
                 .withUpstreams(Map.of("web_service", new URI("http://localhost:8081")))
-                .withMachineFactory(AotMachine::new)
+                .withMachineFactory(MainWasmModule::create)
                 .build();
     }
 }
