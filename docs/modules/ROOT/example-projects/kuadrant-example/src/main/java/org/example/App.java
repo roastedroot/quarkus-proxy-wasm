@@ -5,7 +5,6 @@ import io.roastedroot.proxywasm.Plugin;
 import io.roastedroot.proxywasm.PluginFactory;
 import io.roastedroot.proxywasm.SimpleMetricsHandler;
 import io.roastedroot.proxywasm.StartException;
-import io.roastedroot.proxywasm.kuadrant.example.internal.WasmShimModule;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import java.io.IOException;
@@ -15,6 +14,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.example.internal.WasmShimModule;
 
 /**
  * Application configuration class for the Kuadrant example.
