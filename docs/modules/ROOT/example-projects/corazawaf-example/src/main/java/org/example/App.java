@@ -1,6 +1,5 @@
 package org.example;
 
-import com.dylibso.chicory.wasm.Parser;
 import com.dylibso.chicory.wasm.WasmModule;
 import io.roastedroot.proxywasm.LogHandler;
 import io.roastedroot.proxywasm.Plugin;
@@ -8,6 +7,8 @@ import io.roastedroot.proxywasm.PluginFactory;
 import io.roastedroot.proxywasm.SimpleMetricsHandler;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
+import org.example.internal.CorazaWAFModule;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -27,8 +28,7 @@ public class App {
         // Default constructor
     }
 
-    private static WasmModule module =
-            Parser.parse(App.class.getResourceAsStream("coraza-proxy-wasm.wasm"));
+    private static WasmModule module = CorazaWAFModule.load();
 
     static final String CONFIG;
 
@@ -54,6 +54,7 @@ public class App {
         return () ->
                 Plugin.builder(module)
                         .withName("waf")
+                        .withMachineFactory(CorazaWAFModule::create)
                         .withShared(true)
                         .withLogger(DEBUG ? LogHandler.SYSTEM : null)
                         .withPluginConfig(CONFIG)
