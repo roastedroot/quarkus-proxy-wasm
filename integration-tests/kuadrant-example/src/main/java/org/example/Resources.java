@@ -3,13 +3,13 @@ package org.example;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
-import io.roastedroot.proxywasm.jaxrs.WasmPlugin;
+import io.roastedroot.proxywasm.jaxrs.ProxyWasm;
 
 /**
  * JAX-RS resource class for the Kuadrant example.
- * This class defines the root endpoint and applies the Kuadrant WasmPlugin.
+ * This class defines the root endpoint and applies the Kuadrant ProxyWasm.
  */
-@WasmPlugin("kuadrant") // use the corsaWAF filter
+@ProxyWasm("kuadrant") // use the corsaWAF filter
 @Path("/")
 public class Resources {
 

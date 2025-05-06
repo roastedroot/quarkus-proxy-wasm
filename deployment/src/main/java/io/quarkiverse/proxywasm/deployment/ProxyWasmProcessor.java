@@ -10,8 +10,8 @@ import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.jaxrs.spi.deployment.AdditionalJaxRsResourceMethodAnnotationsBuildItem;
-import io.roastedroot.proxywasm.jaxrs.WasmPlugin;
-import io.roastedroot.proxywasm.jaxrs.cdi.WasmPluginFeature;
+import io.roastedroot.proxywasm.jaxrs.ProxyWasm;
+import io.roastedroot.proxywasm.jaxrs.cdi.ProxyWasmFeature;
 
 class ProxyWasmProcessor {
 
@@ -25,12 +25,12 @@ class ProxyWasmProcessor {
     @BuildStep
     AdditionalBeanBuildItem resources() {
         return new AdditionalBeanBuildItem(
-                WasmPluginFeature.class, VertxServerAdaptor.class, VertxHttpRequestAdaptor.class);
+                ProxyWasmFeature.class, VertxServerAdaptor.class, VertxHttpRequestAdaptor.class);
     }
 
     @BuildStep
     public AdditionalJaxRsResourceMethodAnnotationsBuildItem annotations() {
         return new AdditionalJaxRsResourceMethodAnnotationsBuildItem(
-                List.of(DotName.createSimple(WasmPlugin.class.getName())));
+                List.of(DotName.createSimple(ProxyWasm.class.getName())));
     }
 }
