@@ -11,7 +11,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
 
-import io.roastedroot.proxywasm.jaxrs.WasmPlugin;
+import io.roastedroot.proxywasm.jaxrs.ProxyWasm;
 
 /**
  * JAX-RS resource class for handling requests to /status/{status}.
@@ -19,7 +19,7 @@ import io.roastedroot.proxywasm.jaxrs.WasmPlugin;
  * Applies the "waf" Wasm plugin.
  */
 @Path("/status/{status}")
-@WasmPlugin("waf") // use the corsaWAF filter
+@ProxyWasm("waf") // use the corsaWAF filter
 public class Status {
 
     /**

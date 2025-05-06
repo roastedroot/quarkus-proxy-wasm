@@ -12,7 +12,7 @@ portable, sandboxed, and language-agnostic way, thanks to WebAssembly.
 This Quarkus extension allows you to use Proxy-Wasm plugins to filter requests to Jakarta REST (formerly known as JAX-RS)
 endpoints.
 
-Adding a Proxy-Wasm plugin to a JAX-RS endpoint is as simple as adding a `@WasmPlugin` annotation to a method:
+Adding a Proxy-Wasm plugin to a JAX-RS endpoint is as simple as adding a `@ProxyWasm` annotation to a method:
 
 ```java
 package org.example;
@@ -21,14 +21,14 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import io.roastedroot.proxywasm.jaxrs.WasmPlugin;
+import io.roastedroot.proxywasm.jaxrs.ProxyWasm;
 
 @Path("/example")
 public class Example {
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    @WasmPlugin("waf")
+    @ProxyWasm("waf")
     public String hello() {
         return "hello";
     }

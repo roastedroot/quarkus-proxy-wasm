@@ -9,7 +9,7 @@ import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 
-import io.roastedroot.proxywasm.jaxrs.WasmPlugin;
+import io.roastedroot.proxywasm.jaxrs.ProxyWasm;
 
 /**
  * JAX-RS resource class providing endpoints for integration tests.
@@ -65,7 +65,7 @@ public class Resources {
      */
     @Path("/headerTests")
     @GET
-    @WasmPlugin("headerTests")
+    @ProxyWasm("headerTests")
     public String uhttpHeaders(@HeaderParam("x-request-counter") String counter) {
         return String.format("counter: %s", counter);
     }
@@ -78,7 +78,7 @@ public class Resources {
      */
     @Path("/headerTestsNotShared")
     @GET
-    @WasmPlugin("headerTestsNotShared")
+    @ProxyWasm("headerTestsNotShared")
     public String unotSharedHttpHeaders(@HeaderParam("x-request-counter") String counter) {
         return String.format("counter: %s", counter);
     }
@@ -91,7 +91,7 @@ public class Resources {
      */
     @Path("/tickTests/{sub: .+ }")
     @GET
-    @WasmPlugin("tickTests")
+    @ProxyWasm("tickTests")
     public String tickTests(@PathParam("sub") String sub) {
         return "hello world";
     }
@@ -104,7 +104,7 @@ public class Resources {
      */
     @Path("/ffiTests/reverse")
     @POST
-    @WasmPlugin("ffiTests")
+    @ProxyWasm("ffiTests")
     public String ffiTests(String body) {
         return body;
     }
@@ -116,7 +116,7 @@ public class Resources {
      */
     @Path("/httpCallTests")
     @GET
-    @WasmPlugin("httpCallTests")
+    @ProxyWasm("httpCallTests")
     public String httpCallTests() {
         return "hello world";
     }
@@ -128,7 +128,7 @@ public class Resources {
      */
     @Path("/httpCallTestsAndFFI")
     @GET
-    @WasmPlugin({ "ffiTests", "httpCallTests" })
+    @ProxyWasm({ "ffiTests", "httpCallTests" })
     public String httpCallTestsAndFFI() {
         return "hello world";
     }

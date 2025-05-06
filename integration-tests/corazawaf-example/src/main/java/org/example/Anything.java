@@ -12,17 +12,17 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
-import io.roastedroot.proxywasm.jaxrs.WasmPlugin;
+import io.roastedroot.proxywasm.jaxrs.ProxyWasm;
 
 /**
  * This class is a JAX-RS resource that handles various HTTP methods and paths.
- * It uses the @WasmPlugin annotation to specify the use of the "waf" filter.
+ * It uses the @ProxyWasm annotation to specify the use of the "waf" filter.
  * <p>
  * All paths and methods are handled by this class and it responds with a simple
  * message indicating the method, path, and body (if applicable).
  */
 @Path("/anything")
-@WasmPlugin("waf") // use the corsaWAF filter
+@ProxyWasm("waf") // use the corsaWAF filter
 public class Anything {
 
     /**

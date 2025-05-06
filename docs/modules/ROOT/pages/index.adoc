@@ -63,9 +63,9 @@ public class Example {
 }
 ----
 
-To filter requests to that resource you would add a `@WasmPlugin` at either the class or method level depending on whether you want to filter all requests to the resource or just a specific method.
+To filter requests to that resource you would add a `@ProxyWasm` at either the class or method level depending on whether you want to filter all requests to the resource or just a specific method.
 
-The `@WasmPlugin` annotation should list the names of all the pluigns you want to apply to the resource or method.
+The `@ProxyWasm` annotation should list the names of all the pluigns you want to apply to the resource or method.
 
 [source,java]
 ----
@@ -75,9 +75,9 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import io.roastedroot.proxywasm.jaxrs.WasmPlugin;
+import io.roastedroot.proxywasm.jaxrs.ProxyWasm;
 
-@WasmPlugin("waf")
+@ProxyWasm("waf")
 @Path("/example")
 public class Example {
 
@@ -141,7 +141,7 @@ public class App {
 ----
 
 <1> This will load the `src/main/resources/org/example/coraza-proxy-wasm.wasm` file.  You can get that wasm module link:https://github.com/corazawaf/coraza-proxy-wasm/releases/tag/0.5.0[here].
-<2> The name of the plugin must match the name used in the `@WasmPlugin` annotation.
+<2> The name of the plugin must match the name used in the `@ProxyWasm` annotation.
 <3> The corazawf wasm module requires access to publish custom metrics.  We give it `SimpleMetricsHandler` implementation which gives it access to do so, but those metrics are only kept in memory and don't get exposed anywhere.  You can implement your own `MetricsHandler` to publish the metrics to a monitoring system of your choice.
 <4> The configuration that will be passed to the plugin.  Since we are loading from the classpath store the config inf `src/main/resources/org/example/waf-config.json`:
 
